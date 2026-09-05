@@ -284,12 +284,13 @@ final class SplitsViewModel: ObservableObject {
                 sortOrder: index
             )
         }
-        allocationModels.forEach(context.insert)
 
         if let expenseID {
             guard let expense = split.expenses.first(where: { $0.id == expenseID }) else {
                 throw SplitUIError.expenseNotFound
             }
+
+            allocationModels.forEach(context.insert)
 
             let oldAllocations = expense.allocations
             expense.allocations = []
@@ -303,6 +304,7 @@ final class SplitsViewModel: ObservableObject {
             expense.updatedAt = .now
             expense.allocations = allocationModels
         } else {
+            allocationModels.forEach(context.insert)
             let expense = Expense(
                 title: trimmedTitle,
                 amount: normalizedAmount,
