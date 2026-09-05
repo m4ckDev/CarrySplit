@@ -17,25 +17,31 @@ Keep Carry Splits small, testable, local-first, and easy to maintain.
 ### Models
 Persisted application data such as splits, participants, expenses, allocations, and completed settlement payments.
 
+Lightweight UI snapshot structs mirror persisted records for presentation. They are rebuilt from SwiftData after successful mutations and are never an independent source of truth.
+
 ### Views
 SwiftUI presentation only. Views should not contain settlement mathematics or persistence rules.
 
 ### ViewModels
-Screen state and user actions. ViewModels coordinate models and services but should not duplicate domain logic.
+Screen state and user actions. `SplitsViewModel` owns the `ModelContext` boundary for v1.0 CRUD operations. It validates user intent, updates SwiftData, explicitly saves, then reloads presentation snapshots.
 
 ### Services
-Pure domain operations such as allocation validation, balance calculation, and settlement planning. A small adapter layer converts SwiftData models into pure ledger values before math is performed.
+Pure domain operations such as allocation validation, balance calculation, and settlement planning. A small adapter layer converts persisted or snapshot data into pure ledger values before math is performed.
 
 ### Utilities
 Small reusable helpers such as currency formatting and decimal/minor-unit handling.
 
 ## Data Flow
 
-User action -> View -> ViewModel -> SwiftData / Service -> Updated model -> View
+For a mutation:
+
+User action -> View -> ViewModel -> SwiftData mutation -> `ModelContext.save()` -> reload snapshots -> View
 
 For calculations:
 
-SwiftData models -> `SplitLedgerAdapter` -> pure ledger values -> domain service -> balance / settlement result
+Persisted data / UI snapshot -> pure ledger values -> domain service -> balance / settlement result
+
+SwiftData remains the source of truth. UI snapshots exist only to keep SwiftUI presentation simple and calculation services persistence-agnostic.
 
 ## Persisted Domain
 
@@ -58,6 +64,8 @@ Persisting the currency fraction digits prevents a future formatter or OS behavi
 ### Participant
 
 Stores a local display name and deterministic sort order. No account, email address, phone number, or remote identity is required.
+
+Historical ledger records reference participants by UUID rather than by display name. This allows a participant to be renamed without rewriting expense or settlement history.
 
 ### Expense
 
@@ -109,6 +117,16 @@ The planner then:
 
 This is intentionally a practical deterministic optimizer for a small consumer group-expense app, rather than an expensive global combinatorial optimizer.
 
+## Editing and Deletion Rules
+
+1. Split names can be changed without affecting the ledger.
+2. Participant names can be changed because historical records use UUIDs.
+3. A participant cannot be deleted while referenced as an expense payer, allocation participant, or completed settlement endpoint.
+4. Deleting an expense removes that expense and its allocation children, then recalculates balances from the remaining ledger.
+5. Deleting a split removes its participants, expenses, allocations, and settlement records through SwiftData cascade relationships.
+6. Archived splits remain visible but are read-only until restored.
+7. Completed settlement payments remain historical ledger entries even if later expenses are edited or deleted.
+
 ## Domain Rules
 
 1. Monetary calculations use `Decimal`, never floating-point `Double`.
@@ -127,11 +145,13 @@ SwiftData stores all v1.0 customer data locally on the device.
 
 No remote database, account service, analytics SDK, ad SDK, or cloud synchronization is required for v1.0.
 
-The app scene owns one SwiftData model container shared by the view hierarchy.
+The app scene owns one SwiftData model container shared by the view hierarchy. `SplitsView` supplies the environment `ModelContext` to `SplitsViewModel`, which explicitly saves every successful mutation.
 
-## Testing Priority
+A reload reconstructs all `SplitSession` presentation snapshots from fetched `ExpenseSplit` records. Persistence tests create a fresh `ModelContext` against the same test container to confirm data is reconstructed from storage rather than retained only in view-model memory.
 
-Phase 2 domain tests cover:
+## Testing Coverage
+
+Domain and workflow tests cover:
 
 - Equal splits with currency remainder
 - Zero-decimal currency splitting
@@ -143,8 +163,17 @@ Phase 2 domain tests cover:
 - Exact debtor/creditor matching
 - Unbalanced ledger rejection
 - Unknown participant rejection
+- Full create -> expense -> settlement workflow against SwiftData
+- Expense editing and balance recalculation
+- Case-insensitive duplicate participant rejection
+- Fresh-context ledger reload
+- Split rename and archive persistence
+- Participant rename persistence
+- Historical participant deletion safeguards
+- Expense deletion persistence
+- Full split deletion persistence
 
-Additional persistence and UI tests will be added when those layers are implemented.
+The test files are present in the repository. Final compiler execution and simulator/device verification remain part of Phase 6 in Xcode.
 
 ## Dependency Rule
 
