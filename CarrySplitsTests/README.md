@@ -1,8 +1,8 @@
 # CarrySplitsTests
 
-Domain unit tests live here.
+Unit and workflow tests live here.
 
-## Phase 2 Coverage
+## Domain Coverage
 
 `SettlementServiceTests.swift` covers:
 
@@ -16,6 +16,32 @@ Domain unit tests live here.
 - unbalanced ledger rejection
 - unknown participant rejection
 
+## Workflow Coverage
+
+`SplitsViewModelTests.swift` runs the Phase 3 user workflow against an in-memory SwiftData container and covers:
+
+- split creation
+- participant creation
+- expense creation
+- expense editing
+- balance recalculation
+- settlement generation
+- completed settlement recording
+- case-insensitive duplicate participant rejection
+
+## Persistence Coverage
+
+`PersistenceTests.swift` creates fresh `ModelContext` instances against the same test container and covers:
+
+- reconstructing a complete ledger from SwiftData
+- persisted completed settlements
+- split rename persistence
+- archive-state persistence
+- participant rename persistence
+- protected deletion of participants referenced by history
+- expense deletion persistence
+- split deletion persistence
+
 ## Execution
 
-The tests are authored now and will be attached to the Carry Splits XCTest target when the Xcode project is generated. Full test execution is part of the later verification phase, consistent with the project's code-first workflow.
+The test source is authored in the repository. The full XCTest target will be executed during the Xcode verification phase after the project is assembled, including simulator and physical-device persistence checks.
