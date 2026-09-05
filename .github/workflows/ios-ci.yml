@@ -1,0 +1,161 @@
+name: iOS Verification
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - project.yml
+      - CarrySplits/**
+      - CarrySplitsTests/**
+      - CarrySplitsUITests/**
+      - scripts/generate_app_icon.swift
+      - .github/workflows/ios-ci.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  verify:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: macos-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Show Xcode environment
+        run: |
+          xcodebuild -version
+          xcrun simctl list runtimes
+
+      - name: Install XcodeGen
+        run: brew install xcodegen
+
+      - name: Generate app icon assets
+        run: |
+          set -euo pipefail
+          ICON_DIR="CarrySplits/Resources/Assets.xcassets/AppIcon.appiconset"
+          mkdir -p "$ICON_DIR"
+          swift scripts/generate_app_icon.swift "$ICON_DIR/AppIcon-1024.png"
+          sips -z 40 40 "$ICON_DIR/AppIcon-1024.png" --out "$ICON_DIR/AppIcon-20@2x.png" >/dev/null
+          sips -z 60 60 "$ICON_DIR/AppIcon-1024.png" --out "$ICON_DIR/AppIcon-20@3x.png" >/dev/null
+          sips -z 58 58 "$ICON_DIR/AppIcon-1024.png" --out "$ICON_DIR/AppIcon-29@2x.png" >/dev/null
+          sips -z 87 87 "$ICON_DIR/AppIcon-1024.png" --out "$ICON_DIR/AppIcon-29@3x.png" >/dev/null
+          sips -z 80 80 "$ICON_DIR/AppIcon-1024.png" --out "$ICON_DIR/AppIcon-40@2x.png" >/dev/null
+          sips -z 120 120 "$ICON_DIR/AppIcon-1024.png" --out "$ICON_DIR/AppIcon-40@3x.png" >/dev/null
+          sips -z 120 120 "$ICON_DIR/AppIcon-1024.png" --out "$ICON_DIR/AppIcon-60@2x.png" >/dev/null
+          sips -z 180 180 "$ICON_DIR/AppIcon-1024.png" --out "$ICON_DIR/AppIcon-60@3x.png" >/dev/null
+
+      - name: Generate Xcode project
+        run: |
+          set -euo pipefail
+          xcodegen generate
+          xcodebuild -list -project CarrySplits.xcodeproj
+
+      - name: Select iPhone simulator
+        id: simulator
+        run: |
+          set -euo pipefail
+          SIMULATOR_UDID=$(python3 - <<'PY'
+          import json
+          import subprocess
+
+          payload = subprocess.check_output(["xcrun", "simctl", "list", "devices", "available", "-j"])
+          data = json.loads(payload)
+          runtimes = sorted(
+              ((runtime, devices) for runtime, devices in data["devices"].items() if "iOS" in runtime),
+              reverse=True,
+          )
+          for runtime, devices in runtimes:
+              for device in devices:
+                  if device.get("isAvailable", True) and device.get("name", "").startswith("iPhone"):
+                      print(device["udid"])
+                      raise SystemExit(0)
+          raise SystemExit("No available iPhone simulator found")
+          PY
+          )
+          echo "udid=$SIMULATOR_UDID" >> "$GITHUB_OUTPUT"
+          xcrun simctl boot "$SIMULATOR_UDID" || true
+          xcrun simctl bootstatus "$SIMULATOR_UDID" -b
+
+      - name: Build and test
+        id: xcodebuild
+        run: |
+          mkdir -p verification
+          set +e
+          set -o pipefail
+          xcodebuild \
+            -project CarrySplits.xcodeproj \
+            -scheme CarrySplits \
+            -configuration Debug \
+            -destination "platform=iOS Simulator,id=${{ steps.simulator.outputs.udid }}" \
+            -derivedDataPath DerivedData \
+            -resultBundlePath verification/CarrySplits.xcresult \
+            CODE_SIGNING_ALLOWED=NO \
+            test 2>&1 | tee verification/xcodebuild.log
+          STATUS=${PIPESTATUS[0]}
+          echo "XCODEBUILD_STATUS=$STATUS" >> "$GITHUB_ENV"
+          exit 0
+
+      - name: Write verification report
+        if: always()
+        run: |
+          mkdir -p verification
+          XCODE_VERSION=$(xcodebuild -version | tr '\n' ' ')
+          if [ "${XCODEBUILD_STATUS:-1}" -eq 0 ]; then
+            RESULT="PASS"
+          else
+            RESULT="FAIL"
+          fi
+          {
+            echo "# Carry Splits CI Verification"
+            echo
+            echo "- Commit: \`$GITHUB_SHA\`"
+            echo "- Xcode: \`$XCODE_VERSION\`"
+            echo "- Simulator UDID: \`${{ steps.simulator.outputs.udid }}\`"
+            echo "- Result: **$RESULT**"
+            echo
+            echo "## xcodebuild tail"
+            echo
+            echo '```text'
+            tail -n 160 verification/xcodebuild.log 2>/dev/null || true
+            echo '```'
+          } > verification/CI_REPORT.md
+
+      - name: Commit generated Xcode project and report
+        if: always() && github.ref == 'refs/heads/main'
+        continue-on-error: true
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            CarrySplits.xcodeproj \
+            CarrySplits/Resources/Info.plist \
+            CarrySplits/Resources/Assets.xcassets/AppIcon.appiconset/*.png \
+            verification/CI_REPORT.md
+          if ! git diff --cached --quiet; then
+            git commit -m "ci: update generated Xcode project and verification report"
+            git push origin HEAD:main
+          fi
+
+      - name: Upload verification artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: carry-splits-ios-verification
+          path: |
+            CarrySplits.xcodeproj
+            verification/xcodebuild.log
+            verification/CarrySplits.xcresult
+          if-no-files-found: warn
+
+      - name: Enforce verification result
+        if: always()
+        run: |
+          if [ "${XCODEBUILD_STATUS:-1}" -ne 0 ]; then
+            echo "Xcode verification failed. See verification/CI_REPORT.md and the uploaded artifact."
+            exit 1
+          fi
