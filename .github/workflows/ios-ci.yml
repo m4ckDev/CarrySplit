@@ -78,8 +78,7 @@ jobs:
           PY
           )
           echo "udid=$SIMULATOR_UDID" >> "$GITHUB_OUTPUT"
-          xcrun simctl boot "$SIMULATOR_UDID" || true
-          xcrun simctl bootstatus "$SIMULATOR_UDID" -b
+          echo "Selected simulator: $SIMULATOR_UDID"
 
       - name: Build and test
         id: xcodebuild
@@ -92,6 +91,7 @@ jobs:
             -scheme CarrySplits \
             -configuration Debug \
             -destination "platform=iOS Simulator,id=${{ steps.simulator.outputs.udid }}" \
+            -destination-timeout 120 \
             -derivedDataPath DerivedData \
             -resultBundlePath verification/CarrySplits.xcresult \
             CODE_SIGNING_ALLOWED=NO \
