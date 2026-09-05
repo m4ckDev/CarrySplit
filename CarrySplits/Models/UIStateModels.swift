@@ -6,6 +6,8 @@ struct SplitSession: Identifiable, Equatable {
     var currencyCode: String
     var currencyFractionDigits: Int
     var createdAt: Date
+    var updatedAt: Date
+    var isArchived: Bool
     var participants: [ParticipantEntry]
     var expenses: [ExpenseEntry]
     var settlementPayments: [SettlementEntry]
@@ -16,6 +18,8 @@ struct SplitSession: Identifiable, Equatable {
         currencyCode: String,
         currencyFractionDigits: Int,
         createdAt: Date = .now,
+        updatedAt: Date = .now,
+        isArchived: Bool = false,
         participants: [ParticipantEntry] = [],
         expenses: [ExpenseEntry] = [],
         settlementPayments: [SettlementEntry] = []
@@ -25,6 +29,8 @@ struct SplitSession: Identifiable, Equatable {
         self.currencyCode = currencyCode.uppercased()
         self.currencyFractionDigits = currencyFractionDigits
         self.createdAt = createdAt
+        self.updatedAt = updatedAt
+        self.isArchived = isArchived
         self.participants = participants
         self.expenses = expenses
         self.settlementPayments = settlementPayments
@@ -94,6 +100,54 @@ struct SettlementEntry: Identifiable, Equatable {
 }
 
 extension SplitSession {
+    init(model: ExpenseSplit) {
+        self.init(
+            id: model.id,
+            name: model.name,
+            currencyCode: model.currencyCode,
+            currencyFractionDigits: model.currencyFractionDigits,
+            createdAt: model.createdAt,
+            updatedAt: model.updatedAt,
+            isArchived: model.isArchived,
+            participants: model.participants
+                .sorted { $0.sortOrder < $1.sortOrder }
+                .map {
+                    ParticipantEntry(
+                        id: $0.id,
+                        name: $0.name,
+                        sortOrder: $0.sortOrder
+                    )
+                },
+            expenses: model.expenses.map { expense in
+                ExpenseEntry(
+                    id: expense.id,
+                    title: expense.title,
+                    amount: expense.amount,
+                    payerID: expense.payerID,
+                    splitMethod: expense.splitMethod,
+                    expenseDate: expense.expenseDate,
+                    allocations: expense.allocations
+                        .sorted { $0.sortOrder < $1.sortOrder }
+                        .map {
+                            LedgerAllocation(
+                                participantID: $0.participantID,
+                                amount: $0.amount
+                            )
+                        }
+                )
+            },
+            settlementPayments: model.settlementPayments.map {
+                SettlementEntry(
+                    id: $0.id,
+                    fromParticipantID: $0.fromParticipantID,
+                    toParticipantID: $0.toParticipantID,
+                    amount: $0.amount,
+                    settledAt: $0.settledAt
+                )
+            }
+        )
+    }
+
     var ledgerExpenses: [LedgerExpense] {
         expenses.map {
             LedgerExpense(
