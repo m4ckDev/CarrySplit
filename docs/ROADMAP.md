@@ -64,25 +64,35 @@
 - Improve empty states and participant-management presentation
 - Lock app-icon direction and launch-presentation rules in `docs/BRAND.md`
 
-## Phase 6 — Verification
+## Phase 6A — Automated Xcode Verification ✅
 
-- Assemble the Xcode project and targets
-- Attach all source files to the correct application/test targets
-- Export/import the final 1024 × 1024 app-icon artwork into the asset catalog
-- Configure the neutral launch presentation
-- Run a clean Xcode build with zero compiler errors
-- Resolve compiler warnings
-- Run the complete unit/workflow/persistence test suite
-- Build and run UI automation against stable accessibility identifiers
-- Test a current iPhone simulator
-- Test the oldest supported iOS 17 simulator available
+- Add canonical XcodeGen project definition
+- Define app, unit-test, and UI-test targets
+- Add iPhone app-icon asset catalog and deterministic icon generator
+- Add neutral launch configuration
+- Add macOS Xcode compile gate
+- Generate the Xcode project successfully on macOS
+- Compile the app and both test bundles successfully
+- Run `build-for-testing` successfully
+- Run the complete unit/workflow/persistence test suite through `xcodebuild test`
+- Add and execute UI automation on an iPhone Simulator
+- Verify split creation survives app termination and relaunch through SwiftData
+- Add CI result artifacts and Xcode bootstrap documentation
+- Enforce iPhone-only target configuration
+
+## Phase 6B — Manual Device and Accessibility Verification
+
+- Select the Apple Developer signing team in Xcode
 - Test a physical iPhone
-- Verify complete offline operation
-- Terminate/relaunch and verify SwiftData persistence
+- Verify complete offline operation on-device
+- Terminate/relaunch and verify SwiftData persistence on-device
 - Visually inspect Light Mode and Dark Mode
 - Test standard and accessibility Dynamic Type sizes
 - Perform a VoiceOver navigation pass
 - Test long names, large monetary amounts, and JPY values
+- Inspect the app icon at actual Home Screen size
+- Inspect the neutral launch-to-content transition
+- Resolve any release-blocking local Xcode warnings
 
 ## Phase 7 — Release
 
@@ -96,6 +106,6 @@
 
 ## Current Milestone
 
-**Phase 6 — Verification**
+**Phase 6B — Manual Device and Accessibility Verification**
 
-The v1.0 feature set, local persistence layer, sharing flow, accessibility hooks, adaptive layouts, and visual direction are now established in source. The next milestone is the first real Xcode compile/test cycle, simulator and device validation, final icon attachment, and release-quality verification.
+Automated Xcode verification is green: the app and all test targets compile, the automated test suite runs successfully on a real iPhone Simulator, and UI automation verifies local SwiftData persistence across relaunch. The remaining Phase 6 work requires interactive Xcode and a physical iPhone before release preparation begins.
