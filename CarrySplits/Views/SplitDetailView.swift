@@ -32,6 +32,7 @@ struct SplitDetailView: View {
                     expenseSection(split: split)
                     actionSection(split: split)
                 }
+                .accessibilityIdentifier("split.detail")
                 .navigationTitle(split.name)
                 .toolbar {
                     ToolbarItem(placement: .topBarTrailing) {
@@ -131,6 +132,8 @@ struct SplitDetailView: View {
         } label: {
             Label("Split Actions", systemImage: "ellipsis.circle")
         }
+        .accessibilityIdentifier("split.actions")
+        .accessibilityHint("Shows actions for this split")
     }
 
     @ViewBuilder
@@ -149,6 +152,7 @@ struct SplitDetailView: View {
                             showingAddParticipant = true
                         }
                         .padding(.top, 4)
+                        .accessibilityIdentifier("split.addPerson")
                     }
                 }
                 .padding(.vertical, 4)
@@ -190,6 +194,7 @@ struct SplitDetailView: View {
                     }
                     .buttonStyle(.plain)
                     .disabled(split.isArchived)
+                    .accessibilityIdentifier("expense.row.\(expense.id.uuidString)")
                     .accessibilityHint(split.isArchived ? "Restore this split to edit expenses" : "Opens this expense for editing")
                 }
             }
@@ -206,6 +211,8 @@ struct SplitDetailView: View {
                     Label("Add Expense", systemImage: "plus.circle")
                 }
                 .disabled(split.participants.isEmpty)
+                .accessibilityIdentifier("split.addExpense")
+                .accessibilityHint("Opens the expense entry form")
 
                 NavigationLink {
                     SettleUpView(splitID: splitID, viewModel: viewModel)
@@ -213,6 +220,8 @@ struct SplitDetailView: View {
                     Label("Settle Up", systemImage: "arrow.left.arrow.right")
                 }
                 .disabled(split.expenses.isEmpty)
+                .accessibilityIdentifier("split.settleUp")
+                .accessibilityHint("Shows the remaining payments needed to bring balances to zero")
             }
         }
     }
@@ -257,27 +266,49 @@ private struct BalanceRow: View {
     let formattedAmount: String
 
     var body: some View {
-        HStack(spacing: 12) {
-            Image(systemName: statusIcon)
-                .frame(width: 22)
-                .accessibilityHidden(true)
-
-            VStack(alignment: .leading, spacing: 2) {
-                Text(participant.name)
-                    .font(.body.weight(.medium))
-                Text(statusText)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+        ViewThatFits(in: .horizontal) {
+            HStack(spacing: 12) {
+                statusSymbol
+                participantDetails
+                Spacer(minLength: 8)
+                amountText
             }
 
-            Spacer()
-
-            Text(formattedAmount)
-                .font(.body.monospacedDigit())
-                .fontWeight(.semibold)
+            VStack(alignment: .leading, spacing: 8) {
+                HStack(spacing: 10) {
+                    statusSymbol
+                    participantDetails
+                }
+                amountText
+            }
         }
-        .accessibilityElement(children: .combine)
+        .padding(.vertical, 2)
+        .accessibilityElement(children: .ignore)
         .accessibilityLabel("\(participant.name), \(statusText), \(formattedAmount)")
+    }
+
+    private var statusSymbol: some View {
+        Image(systemName: statusIcon)
+            .frame(width: 22)
+            .accessibilityHidden(true)
+    }
+
+    private var participantDetails: some View {
+        VStack(alignment: .leading, spacing: 2) {
+            Text(participant.name)
+                .font(.body.weight(.medium))
+            Text(statusText)
+                .font(.caption)
+                .foregroundStyle(.secondary)
+        }
+    }
+
+    private var amountText: some View {
+        Text(formattedAmount)
+            .font(.body.monospacedDigit())
+            .fontWeight(.semibold)
+            .lineLimit(1)
+            .minimumScaleFactor(0.8)
     }
 
     private var statusText: String {
@@ -299,27 +330,49 @@ private struct ExpenseRow: View {
     let formattedAmount: String
 
     var body: some View {
-        HStack {
-            VStack(alignment: .leading, spacing: 4) {
-                Text(expense.title)
-                    .font(.body.weight(.medium))
-
-                Text("Paid by \(payerName) • \(expense.splitMethod == .equal ? "Equal" : "Exact")")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-
-                Text(expense.expenseDate, format: .dateTime.month(.abbreviated).day())
-                    .font(.caption2)
-                    .foregroundStyle(.secondary)
+        ViewThatFits(in: .horizontal) {
+            HStack(alignment: .firstTextBaseline, spacing: 12) {
+                details
+                Spacer(minLength: 8)
+                amount
             }
 
-            Spacer()
-
-            Text(formattedAmount)
-                .font(.body.monospacedDigit())
-                .fontWeight(.semibold)
+            VStack(alignment: .leading, spacing: 8) {
+                details
+                amount
+            }
         }
         .contentShape(Rectangle())
-        .accessibilityElement(children: .combine)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(
+            "\(expense.title), \(formattedAmount), paid by \(payerName), \(splitMethodText), \(expense.expenseDate.formatted(date: .abbreviated, time: .omitted))"
+        )
+    }
+
+    private var details: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text(expense.title)
+                .font(.body.weight(.medium))
+
+            Text("Paid by \(payerName) · \(splitMethodText)")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+
+            Text(expense.expenseDate, format: .dateTime.month(.abbreviated).day())
+                .font(.caption2)
+                .foregroundStyle(.secondary)
+        }
+    }
+
+    private var amount: some View {
+        Text(formattedAmount)
+            .font(.body.monospacedDigit())
+            .fontWeight(.semibold)
+            .lineLimit(1)
+            .minimumScaleFactor(0.8)
+    }
+
+    private var splitMethodText: String {
+        expense.splitMethod == .equal ? "equal split" : "exact split"
     }
 }
