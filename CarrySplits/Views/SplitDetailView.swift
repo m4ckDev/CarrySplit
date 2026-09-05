@@ -1,16 +1,33 @@
 import SwiftUI
 
 struct SplitDetailView: View {
+    @Environment(\.dismiss) private var dismiss
+
     let splitID: UUID
     @ObservedObject var viewModel: SplitsViewModel
 
     @State private var showingAddParticipant = false
+    @State private var showingEditSplit = false
+    @State private var showingManageParticipants = false
+    @State private var showingDeleteSplitConfirmation = false
     @State private var expenseEditorContext: ExpenseEditorContext?
+    @State private var errorMessage: String?
 
     var body: some View {
         Group {
             if let split = viewModel.split(withID: splitID) {
                 List {
+                    if split.isArchived {
+                        Section {
+                            Label(
+                                "This split is archived. Restore it to add or edit expenses.",
+                                systemImage: "archivebox"
+                            )
+                            .font(.footnote)
+                            .foregroundStyle(.secondary)
+                        }
+                    }
+
                     balanceSection(split: split)
                     expenseSection(split: split)
                     actionSection(split: split)
@@ -18,26 +35,17 @@ struct SplitDetailView: View {
                 .navigationTitle(split.name)
                 .toolbar {
                     ToolbarItem(placement: .topBarTrailing) {
-                        Menu {
-                            Button {
-                                showingAddParticipant = true
-                            } label: {
-                                Label("Add Person", systemImage: "person.badge.plus")
-                            }
-
-                            Button {
-                                expenseEditorContext = ExpenseEditorContext(expenseID: nil)
-                            } label: {
-                                Label("Add Expense", systemImage: "plus.circle")
-                            }
-                            .disabled(split.participants.isEmpty)
-                        } label: {
-                            Label("Add", systemImage: "plus")
-                        }
+                        managementMenu(split: split)
                     }
                 }
                 .sheet(isPresented: $showingAddParticipant) {
                     AddParticipantView(splitID: splitID, viewModel: viewModel)
+                }
+                .sheet(isPresented: $showingEditSplit) {
+                    EditSplitView(splitID: splitID, viewModel: viewModel)
+                }
+                .sheet(isPresented: $showingManageParticipants) {
+                    ManageParticipantsView(splitID: splitID, viewModel: viewModel)
                 }
                 .sheet(item: $expenseEditorContext) { context in
                     ExpenseEditorView(
@@ -46,6 +54,23 @@ struct SplitDetailView: View {
                         viewModel: viewModel
                     )
                 }
+                .confirmationDialog(
+                    "Delete \(split.name)?",
+                    isPresented: $showingDeleteSplitConfirmation,
+                    titleVisibility: .visible
+                ) {
+                    Button("Delete Split", role: .destructive) {
+                        deleteSplit()
+                    }
+                    Button("Cancel", role: .cancel) { }
+                } message: {
+                    Text("This permanently removes the split, its people, expenses, allocations, and completed settlement records from this iPhone.")
+                }
+                .alert("Couldn’t Update Split", isPresented: errorBinding) {
+                    Button("OK", role: .cancel) { }
+                } message: {
+                    Text(errorMessage ?? "Unknown error")
+                }
             } else {
                 ContentUnavailableView(
                     "Split Not Found",
@@ -53,6 +78,58 @@ struct SplitDetailView: View {
                     description: Text("Return to Carry Splits and choose another split.")
                 )
             }
+        }
+    }
+
+    private func managementMenu(split: SplitSession) -> some View {
+        Menu {
+            if !split.isArchived {
+                Button {
+                    showingAddParticipant = true
+                } label: {
+                    Label("Add Person", systemImage: "person.badge.plus")
+                }
+
+                Button {
+                    expenseEditorContext = ExpenseEditorContext(expenseID: nil)
+                } label: {
+                    Label("Add Expense", systemImage: "plus.circle")
+                }
+                .disabled(split.participants.isEmpty)
+
+                Button {
+                    showingManageParticipants = true
+                } label: {
+                    Label("Manage People", systemImage: "person.2")
+                }
+
+                Divider()
+            }
+
+            Button {
+                showingEditSplit = true
+            } label: {
+                Label("Rename Split", systemImage: "pencil")
+            }
+
+            Button {
+                toggleArchive(split: split)
+            } label: {
+                Label(
+                    split.isArchived ? "Restore Split" : "Archive Split",
+                    systemImage: split.isArchived ? "arrow.uturn.backward.circle" : "archivebox"
+                )
+            }
+
+            Divider()
+
+            Button(role: .destructive) {
+                showingDeleteSplitConfirmation = true
+            } label: {
+                Label("Delete Split", systemImage: "trash")
+            }
+        } label: {
+            Label("Split Actions", systemImage: "ellipsis.circle")
         }
     }
 
@@ -67,10 +144,12 @@ struct SplitDetailView: View {
                         .font(.footnote)
                         .foregroundStyle(.secondary)
 
-                    Button("Add Person") {
-                        showingAddParticipant = true
+                    if !split.isArchived {
+                        Button("Add Person") {
+                            showingAddParticipant = true
+                        }
+                        .padding(.top, 4)
                     }
-                    .padding(.top, 4)
                 }
                 .padding(.vertical, 4)
             } else {
@@ -100,6 +179,7 @@ struct SplitDetailView: View {
             } else {
                 ForEach(split.expenses.sorted(by: { $0.expenseDate > $1.expenseDate })) { expense in
                     Button {
+                        guard !split.isArchived else { return }
                         expenseEditorContext = ExpenseEditorContext(expenseID: expense.id)
                     } label: {
                         ExpenseRow(
@@ -109,7 +189,8 @@ struct SplitDetailView: View {
                         )
                     }
                     .buttonStyle(.plain)
-                    .accessibilityHint("Opens this expense for editing")
+                    .disabled(split.isArchived)
+                    .accessibilityHint(split.isArchived ? "Restore this split to edit expenses" : "Opens this expense for editing")
                 }
             }
         }
@@ -117,20 +198,46 @@ struct SplitDetailView: View {
 
     @ViewBuilder
     private func actionSection(split: SplitSession) -> some View {
-        Section {
-            Button {
-                expenseEditorContext = ExpenseEditorContext(expenseID: nil)
-            } label: {
-                Label("Add Expense", systemImage: "plus.circle")
-            }
-            .disabled(split.participants.isEmpty)
+        if !split.isArchived {
+            Section {
+                Button {
+                    expenseEditorContext = ExpenseEditorContext(expenseID: nil)
+                } label: {
+                    Label("Add Expense", systemImage: "plus.circle")
+                }
+                .disabled(split.participants.isEmpty)
 
-            NavigationLink {
-                SettleUpView(splitID: splitID, viewModel: viewModel)
-            } label: {
-                Label("Settle Up", systemImage: "arrow.left.arrow.right")
+                NavigationLink {
+                    SettleUpView(splitID: splitID, viewModel: viewModel)
+                } label: {
+                    Label("Settle Up", systemImage: "arrow.left.arrow.right")
+                }
+                .disabled(split.expenses.isEmpty)
             }
-            .disabled(split.expenses.isEmpty)
+        }
+    }
+
+    private var errorBinding: Binding<Bool> {
+        Binding(
+            get: { errorMessage != nil },
+            set: { if !$0 { errorMessage = nil } }
+        )
+    }
+
+    private func toggleArchive(split: SplitSession) {
+        do {
+            try viewModel.setSplitArchived(splitID, archived: !split.isArchived)
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
+
+    private func deleteSplit() {
+        do {
+            try viewModel.deleteSplit(splitID)
+            dismiss()
+        } catch {
+            errorMessage = error.localizedDescription
         }
     }
 
