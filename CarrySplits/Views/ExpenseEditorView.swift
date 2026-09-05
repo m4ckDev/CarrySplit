@@ -16,6 +16,7 @@ struct ExpenseEditorView: View {
     @State private var expenseDate: Date
     @State private var showingDeleteConfirmation = false
     @State private var errorMessage: String?
+    @FocusState private var titleIsFocused: Bool
 
     init(splitID: UUID, expenseID: UUID? = nil, viewModel: SplitsViewModel) {
         self.splitID = splitID
@@ -50,25 +51,34 @@ struct ExpenseEditorView: View {
                     Section("Expense") {
                         TextField("What was it?", text: $title)
                             .textInputAutocapitalization(.sentences)
+                            .submitLabel(.next)
+                            .focused($titleIsFocused)
+                            .accessibilityIdentifier("expense.title")
+                            .accessibilityLabel("Expense name")
 
-                        HStack {
+                        HStack(spacing: 10) {
                             Text(split.currencyCode)
                                 .foregroundStyle(.secondary)
+                                .accessibilityHidden(true)
                             TextField(amountPlaceholder(for: split), text: $amountText)
                                 .keyboardType(.decimalPad)
                                 .multilineTextAlignment(.trailing)
+                                .accessibilityIdentifier("expense.amount")
+                                .accessibilityLabel("Amount in \(split.currencyCode)")
                         }
 
                         DatePicker("Date", selection: $expenseDate, displayedComponents: .date)
+                            .accessibilityIdentifier("expense.date")
                     }
 
                     Section("Paid By") {
                         Picker("Payer", selection: $payerID) {
-                            ForEach(split.participants) { participant in
+                            ForEach(split.participants.sorted(by: { $0.sortOrder < $1.sortOrder })) { participant in
                                 Text(participant.name)
                                     .tag(Optional(participant.id))
                             }
                         }
+                        .accessibilityIdentifier("expense.payer")
                     }
 
                     Section("Split") {
@@ -77,6 +87,8 @@ struct ExpenseEditorView: View {
                             Text("Exact").tag(SplitMethod.exact)
                         }
                         .pickerStyle(.segmented)
+                        .accessibilityIdentifier("expense.splitMethod")
+                        .accessibilityHint("Choose equal shares or enter exact amounts")
                     }
 
                     Section("Split Between") {
@@ -85,35 +97,29 @@ struct ExpenseEditorView: View {
                                 participant.name,
                                 isOn: participantSelectionBinding(for: participant.id)
                             )
+                            .accessibilityIdentifier("expense.participant.\(participant.id.uuidString)")
                         }
                     }
 
                     if splitMethod == .exact {
-                        Section("Exact Amounts") {
+                        Section {
                             ForEach(
                                 split.participants
                                     .filter { selectedParticipantIDs.contains($0.id) }
                                     .sorted(by: { $0.sortOrder < $1.sortOrder })
                             ) { participant in
-                                HStack {
-                                    Text(participant.name)
-                                    Spacer()
-                                    Text(split.currencyCode)
-                                        .font(.caption)
-                                        .foregroundStyle(.secondary)
-                                    TextField(
-                                        amountPlaceholder(for: split),
-                                        text: exactAmountBinding(for: participant.id)
-                                    )
-                                    .keyboardType(.decimalPad)
-                                    .multilineTextAlignment(.trailing)
-                                    .frame(maxWidth: 110)
-                                }
+                                ExactAmountRow(
+                                    participantName: participant.name,
+                                    currencyCode: split.currencyCode,
+                                    placeholder: amountPlaceholder(for: split),
+                                    text: exactAmountBinding(for: participant.id),
+                                    accessibilityIdentifier: "expense.exact.\(participant.id.uuidString)"
+                                )
                             }
-
-                            Text("Exact amounts must add up to the expense total.")
-                                .font(.footnote)
-                                .foregroundStyle(.secondary)
+                        } header: {
+                            Text("Exact Amounts")
+                        } footer: {
+                            Text(exactAllocationStatus(for: split))
                         }
                     }
 
@@ -122,9 +128,11 @@ struct ExpenseEditorView: View {
                             Button("Delete Expense", role: .destructive) {
                                 showingDeleteConfirmation = true
                             }
+                            .accessibilityIdentifier("expense.delete")
                         }
                     }
                 }
+                .scrollDismissesKeyboard(.interactively)
                 .navigationTitle(expenseID == nil ? "Add Expense" : "Edit Expense")
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
@@ -138,6 +146,13 @@ struct ExpenseEditorView: View {
                         Button("Save") {
                             save(split: split)
                         }
+                        .disabled(!canSave(split: split))
+                        .accessibilityIdentifier("expense.save")
+                    }
+                }
+                .task {
+                    if expenseID == nil {
+                        titleIsFocused = true
                     }
                 }
                 .confirmationDialog(
@@ -189,6 +204,63 @@ struct ExpenseEditorView: View {
             get: { exactAmountText[participantID, default: ""] },
             set: { exactAmountText[participantID] = $0 }
         )
+    }
+
+    private func canSave(split: SplitSession) -> Bool {
+        guard !title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
+              let amount = parseDecimal(amountText),
+              MoneyMath.minorUnits(amount, scale: split.currencyFractionDigits) > 0,
+              let payerID,
+              split.participants.contains(where: { $0.id == payerID }),
+              !selectedParticipantIDs.isEmpty else {
+            return false
+        }
+
+        if splitMethod == .exact {
+            let totalUnits = MoneyMath.minorUnits(amount, scale: split.currencyFractionDigits)
+            var allocatedUnits: Int64 = 0
+
+            for participantID in selectedParticipantIDs {
+                guard let exactAmount = parseDecimal(exactAmountText[participantID, default: ""]),
+                      exactAmount >= .zero else {
+                    return false
+                }
+                allocatedUnits += MoneyMath.minorUnits(exactAmount, scale: split.currencyFractionDigits)
+            }
+
+            return allocatedUnits == totalUnits
+        }
+
+        return true
+    }
+
+    private func exactAllocationStatus(for split: SplitSession) -> String {
+        guard let amount = parseDecimal(amountText), amount >= .zero else {
+            return "Enter the expense total, then assign an amount to each selected person."
+        }
+
+        let totalUnits = MoneyMath.minorUnits(amount, scale: split.currencyFractionDigits)
+        let allocatedUnits = selectedParticipantIDs.reduce(Int64(0)) { partial, participantID in
+            guard let value = parseDecimal(exactAmountText[participantID, default: ""]) else {
+                return partial
+            }
+            return partial + MoneyMath.minorUnits(value, scale: split.currencyFractionDigits)
+        }
+        let difference = totalUnits - allocatedUnits
+
+        if difference == 0, totalUnits > 0 {
+            return "Exact amounts match the expense total."
+        }
+
+        let absoluteDifference = difference < 0 ? -difference : difference
+        let formattedDifference = CurrencyFormatter.string(
+            from: MoneyMath.decimal(fromMinorUnits: absoluteDifference, scale: split.currencyFractionDigits),
+            currencyCode: split.currencyCode
+        )
+
+        return difference >= 0
+            ? "\(formattedDifference) remaining."
+            : "\(formattedDifference) over the expense total."
     }
 
     private func save(split: SplitSession) {
@@ -257,5 +329,43 @@ struct ExpenseEditorView: View {
 
     private func amountPlaceholder(for split: SplitSession) -> String {
         split.currencyFractionDigits == 0 ? "0" : "0.00"
+    }
+}
+
+private struct ExactAmountRow: View {
+    let participantName: String
+    let currencyCode: String
+    let placeholder: String
+    @Binding var text: String
+    let accessibilityIdentifier: String
+
+    var body: some View {
+        ViewThatFits(in: .horizontal) {
+            HStack(spacing: 10) {
+                Text(participantName)
+                Spacer(minLength: 8)
+                currencyField
+                    .frame(minWidth: 110, idealWidth: 130, maxWidth: 160)
+            }
+
+            VStack(alignment: .leading, spacing: 6) {
+                Text(participantName)
+                currencyField
+            }
+        }
+    }
+
+    private var currencyField: some View {
+        HStack(spacing: 6) {
+            Text(currencyCode)
+                .font(.caption)
+                .foregroundStyle(.secondary)
+                .accessibilityHidden(true)
+            TextField(placeholder, text: $text)
+                .keyboardType(.decimalPad)
+                .multilineTextAlignment(.trailing)
+                .accessibilityIdentifier(accessibilityIdentifier)
+                .accessibilityLabel("Exact amount for \(participantName) in \(currencyCode)")
+        }
     }
 }
