@@ -1,25 +1,28 @@
 # Carry Splits — Roadmap
 
-## Phase 1 — Foundation
+## Phase 1 — Foundation ✅
 
 - Lock v1.0 product scope
 - Establish repository structure
 - Add documentation and policies
 - Add Swift source skeleton
 
-## Phase 2 — Core Domain
+## Phase 2 — Core Domain ✅
 
 - Define SwiftData models
-- Implement participant and expense relationships
+- Implement split, participant, expense, allocation, and settlement relationships
+- Implement currency-aware minor-unit math
 - Implement equal split calculations
-- Implement exact amount allocations
+- Implement exact amount allocations and validation
 - Implement running balance calculations
-- Implement settlement optimizer
-- Add unit tests for all domain math
+- Implement completed settlement accounting
+- Implement deterministic settlement optimization
+- Add unit tests for core domain math
 
 ## Phase 3 — Core UI
 
 - Build Splits screen
+- Build Create Split flow
 - Build Split Detail screen
 - Build Add/Edit Expense flow
 - Build Settle Up screen
@@ -27,11 +30,12 @@
 
 ## Phase 4 — Persistence and Editing
 
-- Persist splits locally with SwiftData
+- Wire SwiftUI CRUD operations to SwiftData
 - Support rename, archive, and delete
-- Support participant editing
+- Support participant editing with historical-data safeguards
 - Support expense editing and deletion
-- Persist settlement completion state
+- Persist completed settlement payments
+- Verify relaunch persistence
 
 ## Phase 5 — Polish
 
@@ -65,6 +69,6 @@
 
 ## Current Milestone
 
-**Foundation**
+**Phase 3 — Core UI**
 
-The next implementation milestone after the repository foundation is the domain model and settlement engine.
+The domain ledger and settlement engine are established. The next milestone is the first complete user workflow: create a split, add participants, enter an expense, see balances, and settle up.
