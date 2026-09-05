@@ -6,13 +6,13 @@ Carry Splits is a small, local-first iPhone expense splitter. One person records
 
 ## Status
 
-**Phase 3 — Core UI complete.**
+**Phase 4 — Persistence and Editing complete.**
 
-The repository now contains the complete in-memory SwiftUI workflow: create a split, add participants, add or edit expenses, see live running balances, generate an optimized settlement plan, and mark settlement payments paid. Phase 4 will connect this workflow to the existing SwiftData domain so customer data persists across app launches.
+Carry Splits now has a complete local workflow backed by SwiftData: create a split, add or rename participants, add/edit/delete expenses, see live balances, settle payments, archive or restore splits, and reopen the data from the local store. Phase 5 is focused on visual, accessibility, sharing, and release-facing polish.
 
 ## v1.0 Scope
 
-- Create, rename, archive, and delete splits
+- Create, rename, archive, restore, and delete splits
 - Add and manage participants by name
 - Add, edit, and delete shared expenses
 - Equal and exact-amount splitting
@@ -78,12 +78,14 @@ CarrySplit/
 6. See everyone's running balance update immediately.
 7. Open Settle Up to generate the remaining transfers.
 8. Mark a real-world payment paid and recalculate the plan.
+9. Rename, archive, restore, or delete the split as needed.
+10. Close and reopen the app with the local ledger preserved by SwiftData.
 
-Phase 3 uses temporary in-memory session models so the full experience can be developed independently from persistence. Phase 4 will replace that temporary state with SwiftData-backed CRUD without changing the settlement engine.
+## Persistence Design
 
-## Core Domain
+SwiftData is the source of truth for customer data.
 
-Persisted entities already defined for Phase 4:
+Persisted entities:
 
 - `ExpenseSplit`
 - `Participant`
@@ -91,9 +93,13 @@ Persisted entities already defined for Phase 4:
 - `ExpenseAllocation`
 - `SettlementPayment`
 
-Pure calculation types and services are intentionally separate from SwiftData. The settlement engine receives plain ledger values, calculates balances in integer minor units, and converts results back to `Decimal` for persistence and display.
+The UI does not independently own mutable ledger data. `SplitsViewModel` writes each successful mutation to `ModelContext`, saves it, then rebuilds lightweight `SplitSession` snapshots from SwiftData for presentation.
 
-A completed settlement is recorded as a ledger payment. Generated settlement recommendations are not persisted until the user marks a payment as completed, preventing stale recommendations from becoming source-of-truth data.
+This keeps the settlement engine independent from persistence while preventing session state and stored state from drifting apart.
+
+Historical safeguards prevent deleting a participant while that person is referenced by an expense or completed settlement. Renaming a participant is safe because historical records reference stable UUIDs rather than names.
+
+Generated settlement recommendations are not stored as source-of-truth records. A settlement becomes persisted history only after the user marks that payment as completed.
 
 ## Development Principles
 
@@ -101,7 +107,7 @@ A completed settlement is recorded as a ledger payment. Generated settlement rec
 2. Prefer native Apple frameworks over third-party dependencies.
 3. Keep settlement calculations independent from the UI and persistence layers.
 4. Keep customer expense data on-device in v1.0.
-5. Require tests for balance and settlement calculations.
+5. Require tests for balance, settlement, and persistence behavior.
 6. Avoid infrastructure that does not directly improve the core split-and-settle workflow.
 
 ## Documentation
