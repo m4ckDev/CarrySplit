@@ -1,11 +1,13 @@
 import Foundation
+import SwiftData
 import XCTest
 @testable import CarrySplits
 
 @MainActor
 final class SplitsViewModelTests: XCTestCase {
     func testCompleteEqualSplitWorkflowSettlesToZero() throws {
-        let viewModel = SplitsViewModel()
+        let container = try makeContainer()
+        let viewModel = configuredViewModel(container: container)
         let splitID = try viewModel.createSplit(
             name: "Dinner",
             currency: CurrencyOption(code: "USD", name: "US Dollar", fractionDigits: 2)
@@ -40,7 +42,8 @@ final class SplitsViewModelTests: XCTestCase {
     }
 
     func testEditingExpenseRecalculatesBalances() throws {
-        let viewModel = SplitsViewModel()
+        let container = try makeContainer()
+        let viewModel = configuredViewModel(container: container)
         let splitID = try viewModel.createSplit(
             name: "Trip",
             currency: CurrencyOption(code: "USD", name: "US Dollar", fractionDigits: 2)
@@ -77,7 +80,8 @@ final class SplitsViewModelTests: XCTestCase {
     }
 
     func testDuplicateParticipantNameIsRejectedCaseInsensitively() throws {
-        let viewModel = SplitsViewModel()
+        let container = try makeContainer()
+        let viewModel = configuredViewModel(container: container)
         let splitID = try viewModel.createSplit(
             name: "Weekend",
             currency: CurrencyOption(code: "USD", name: "US Dollar", fractionDigits: 2)
@@ -88,6 +92,27 @@ final class SplitsViewModelTests: XCTestCase {
         XCTAssertThrowsError(try viewModel.addParticipant(name: "mike", to: splitID)) { error in
             XCTAssertEqual(error as? SplitUIError, .duplicateParticipantName)
         }
+    }
+
+    private func makeContainer() throws -> ModelContainer {
+        let schema = Schema([
+            ExpenseSplit.self,
+            Participant.self,
+            Expense.self,
+            ExpenseAllocation.self,
+            SettlementPayment.self
+        ])
+        let configuration = ModelConfiguration(
+            schema: schema,
+            isStoredInMemoryOnly: true
+        )
+        return try ModelContainer(for: schema, configurations: [configuration])
+    }
+
+    private func configuredViewModel(container: ModelContainer) -> SplitsViewModel {
+        let viewModel = SplitsViewModel()
+        viewModel.configure(modelContext: container.mainContext)
+        return viewModel
     }
 
     private func decimal(_ value: String) -> Decimal {
