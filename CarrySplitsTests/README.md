@@ -42,6 +42,15 @@ Unit and workflow tests live here.
 - expense deletion persistence
 - split deletion persistence
 
+## Polish Coverage
+
+`SettlementSummaryServiceTests.swift` covers:
+
+- shareable settlement transfer text
+- completed/all-settled summary state
+- no-expense summary state
+- deterministic participant naming and amount output
+
 ## Execution
 
-The test source is authored in the repository. The full XCTest target will be executed during the Xcode verification phase after the project is assembled, including simulator and physical-device persistence checks.
+The test source is authored in the repository. The full XCTest target will be executed during the Xcode verification phase after the project is assembled, including simulator and physical-device persistence, accessibility, and appearance checks.
