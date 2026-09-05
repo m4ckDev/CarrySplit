@@ -14,6 +14,7 @@ struct ExpenseEditorView: View {
     @State private var selectedParticipantIDs: Set<UUID>
     @State private var exactAmountText: [UUID: String]
     @State private var expenseDate: Date
+    @State private var showingDeleteConfirmation = false
     @State private var errorMessage: String?
 
     init(splitID: UUID, expenseID: UUID? = nil, viewModel: SplitsViewModel) {
@@ -115,6 +116,14 @@ struct ExpenseEditorView: View {
                                 .foregroundStyle(.secondary)
                         }
                     }
+
+                    if expenseID != nil {
+                        Section {
+                            Button("Delete Expense", role: .destructive) {
+                                showingDeleteConfirmation = true
+                            }
+                        }
+                    }
                 }
                 .navigationTitle(expenseID == nil ? "Add Expense" : "Edit Expense")
                 .navigationBarTitleDisplayMode(.inline)
@@ -131,7 +140,19 @@ struct ExpenseEditorView: View {
                         }
                     }
                 }
-                .alert("Couldn’t Save Expense", isPresented: errorBinding) {
+                .confirmationDialog(
+                    "Delete this expense?",
+                    isPresented: $showingDeleteConfirmation,
+                    titleVisibility: .visible
+                ) {
+                    Button("Delete Expense", role: .destructive) {
+                        deleteExpense()
+                    }
+                    Button("Cancel", role: .cancel) { }
+                } message: {
+                    Text("Balances and the current settlement plan will be recalculated immediately.")
+                }
+                .alert("Couldn’t Update Expense", isPresented: errorBinding) {
                     Button("OK", role: .cancel) { }
                 } message: {
                     Text(errorMessage ?? "Unknown error")
@@ -209,6 +230,17 @@ struct ExpenseEditorView: View {
                 exactAmounts: exactAmounts,
                 expenseDate: expenseDate
             )
+            dismiss()
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
+
+    private func deleteExpense() {
+        guard let expenseID else { return }
+
+        do {
+            try viewModel.deleteExpense(expenseID, from: splitID)
             dismiss()
         } catch {
             errorMessage = error.localizedDescription
