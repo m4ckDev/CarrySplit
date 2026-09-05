@@ -24,6 +24,8 @@ struct SplitsView: View {
                     } label: {
                         Label("New Split", systemImage: "plus")
                     }
+                    .accessibilityIdentifier("splits.new")
+                    .accessibilityHint("Creates a new shared-expense split")
                 }
             }
             .sheet(isPresented: $showingCreateSplit) {
@@ -49,6 +51,7 @@ struct SplitsView: View {
                 systemImage: "person.2",
                 description: Text("Create a split, add people, then start carrying shared balances forward.")
             )
+            .accessibilityIdentifier("splits.empty")
         }
     }
 
@@ -71,6 +74,7 @@ struct SplitsView: View {
             }
         }
         .listStyle(.insetGrouped)
+        .accessibilityIdentifier("splits.list")
         .refreshable {
             try? viewModel.reloadFromPersistence()
         }
@@ -82,6 +86,8 @@ struct SplitsView: View {
         } label: {
             SplitRow(split: split)
         }
+        .accessibilityIdentifier("split.row.\(split.id.uuidString)")
+        .accessibilityHint(split.isArchived ? "Opens this archived split" : "Opens this split")
     }
 }
 
@@ -89,30 +95,55 @@ private struct SplitRow: View {
     let split: SplitSession
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 5) {
-            HStack(spacing: 8) {
-                Text(split.name)
-                    .font(.headline)
+        VStack(alignment: .leading, spacing: 6) {
+            ViewThatFits(in: .horizontal) {
+                HStack(alignment: .firstTextBaseline, spacing: 8) {
+                    title
+                    if split.isArchived {
+                        archivedLabel
+                    }
+                }
 
-                if split.isArchived {
-                    Text("Archived")
-                        .font(.caption2.weight(.semibold))
-                        .foregroundStyle(.secondary)
+                VStack(alignment: .leading, spacing: 4) {
+                    title
+                    if split.isArchived {
+                        archivedLabel
+                    }
                 }
             }
 
-            HStack(spacing: 8) {
-                Label("\(split.participants.count)", systemImage: "person.2")
-                Text("•")
-                Text(split.currencyCode)
-                Text("•")
-                Text(expenseLabel)
-            }
-            .font(.caption)
-            .foregroundStyle(.secondary)
+            Text(metadataText)
+                .font(.caption)
+                .foregroundStyle(.secondary)
         }
-        .padding(.vertical, 4)
-        .accessibilityElement(children: .combine)
+        .padding(.vertical, 5)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(accessibilitySummary)
+    }
+
+    private var title: some View {
+        Text(split.name)
+            .font(.headline)
+    }
+
+    private var archivedLabel: some View {
+        Text("Archived")
+            .font(.caption2.weight(.semibold))
+            .foregroundStyle(.secondary)
+    }
+
+    private var metadataText: String {
+        "\(participantLabel) · \(split.currencyCode) · \(expenseLabel)"
+    }
+
+    private var accessibilitySummary: String {
+        let archiveStatus = split.isArchived ? ", archived" : ""
+        return "\(split.name)\(archiveStatus), \(participantLabel), currency \(split.currencyCode), \(expenseLabel)"
+    }
+
+    private var participantLabel: String {
+        let count = split.participants.count
+        return count == 1 ? "1 person" : "\(count) people"
     }
 
     private var expenseLabel: String {
