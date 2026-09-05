@@ -7,6 +7,7 @@ struct CreateSplitView: View {
     @State private var name = ""
     @State private var selectedCurrency = CurrencyCatalog.defaultOption
     @State private var errorMessage: String?
+    @FocusState private var nameIsFocused: Bool
 
     var body: some View {
         NavigationStack {
@@ -15,6 +16,14 @@ struct CreateSplitView: View {
                     TextField("Trip, dinner, house...", text: $name)
                         .textInputAutocapitalization(.words)
                         .submitLabel(.done)
+                        .focused($nameIsFocused)
+                        .accessibilityIdentifier("createSplit.name")
+                        .accessibilityLabel("Split name")
+                        .onSubmit {
+                            if canCreate {
+                                createSplit()
+                            }
+                        }
                 }
 
                 Section("Currency") {
@@ -24,6 +33,8 @@ struct CreateSplitView: View {
                                 .tag(option)
                         }
                     }
+                    .accessibilityIdentifier("createSplit.currency")
+                    .accessibilityHint("Sets the currency used for every expense in this split")
                 }
 
                 Section {
@@ -45,8 +56,12 @@ struct CreateSplitView: View {
                     Button("Create") {
                         createSplit()
                     }
-                    .disabled(name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                    .disabled(!canCreate)
+                    .accessibilityIdentifier("createSplit.create")
                 }
+            }
+            .task {
+                nameIsFocused = true
             }
             .alert("Couldn’t Create Split", isPresented: errorBinding) {
                 Button("OK", role: .cancel) { }
@@ -54,6 +69,10 @@ struct CreateSplitView: View {
                 Text(errorMessage ?? "Unknown error")
             }
         }
+    }
+
+    private var canCreate: Bool {
+        !name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
     }
 
     private var errorBinding: Binding<Bool> {
