@@ -7,9 +7,9 @@ enum CurrencyFormatter {
         locale: Locale = .current
     ) -> String {
         let formatter = NumberFormatter()
+        formatter.locale = locale
         formatter.numberStyle = .currency
         formatter.currencyCode = currencyCode.uppercased()
-        formatter.locale = locale
         return formatter.string(from: amount as NSDecimalNumber) ?? "\(amount)"
     }
 
