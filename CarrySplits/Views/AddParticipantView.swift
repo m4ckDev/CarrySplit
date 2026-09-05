@@ -7,6 +7,7 @@ struct AddParticipantView: View {
 
     @State private var name = ""
     @State private var errorMessage: String?
+    @FocusState private var nameIsFocused: Bool
 
     var body: some View {
         NavigationStack {
@@ -15,7 +16,20 @@ struct AddParticipantView: View {
                     TextField("Name", text: $name)
                         .textInputAutocapitalization(.words)
                         .submitLabel(.done)
-                        .onSubmit(addParticipant)
+                        .focused($nameIsFocused)
+                        .accessibilityIdentifier("addPerson.name")
+                        .accessibilityLabel("Person name")
+                        .onSubmit {
+                            if canAdd {
+                                addParticipant()
+                            }
+                        }
+                }
+
+                Section {
+                    Text("Only a name is needed. Carry Splits does not require an account, email address, or phone number.")
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
                 }
             }
             .navigationTitle("Add Person")
@@ -31,8 +45,12 @@ struct AddParticipantView: View {
                     Button("Add") {
                         addParticipant()
                     }
-                    .disabled(name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                    .disabled(!canAdd)
+                    .accessibilityIdentifier("addPerson.add")
                 }
+            }
+            .task {
+                nameIsFocused = true
             }
             .alert("Couldn’t Add Person", isPresented: errorBinding) {
                 Button("OK", role: .cancel) { }
@@ -40,6 +58,10 @@ struct AddParticipantView: View {
                 Text(errorMessage ?? "Unknown error")
             }
         }
+    }
+
+    private var canAdd: Bool {
+        !name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
     }
 
     private var errorBinding: Binding<Bool> {
