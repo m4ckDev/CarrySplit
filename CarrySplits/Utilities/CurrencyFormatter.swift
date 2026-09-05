@@ -1,11 +1,23 @@
 import Foundation
 
 enum CurrencyFormatter {
-    static func string(from amount: Decimal, currencyCode: String, locale: Locale = .current) -> String {
+    static func string(
+        from amount: Decimal,
+        currencyCode: String,
+        locale: Locale = .current
+    ) -> String {
         let formatter = NumberFormatter()
         formatter.numberStyle = .currency
-        formatter.currencyCode = currencyCode
+        formatter.currencyCode = currencyCode.uppercased()
         formatter.locale = locale
         return formatter.string(from: amount as NSDecimalNumber) ?? "\(amount)"
+    }
+
+    static func fractionDigits(for currencyCode: String) -> Int {
+        let formatter = NumberFormatter()
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.numberStyle = .currency
+        formatter.currencyCode = currencyCode.uppercased()
+        return formatter.maximumFractionDigits
     }
 }
