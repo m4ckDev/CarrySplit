@@ -6,9 +6,9 @@ Carry Splits is a small, local-first iPhone expense splitter. One person records
 
 ## Status
 
-**Phase 4 — Persistence and Editing complete.**
+**Phase 5 — Polish complete.**
 
-Carry Splits now has a complete local workflow backed by SwiftData: create a split, add or rename participants, add/edit/delete expenses, see live balances, settle payments, archive or restore splits, and reopen the data from the local store. Phase 5 is focused on visual, accessibility, sharing, and release-facing polish.
+Carry Splits now has the full v1.0 source workflow, SwiftData persistence, native settlement sharing, adaptive large-text layouts, VoiceOver-oriented labels and hints, stable accessibility identifiers, locale-safe currency formatting, and restrained settlement haptics. Phase 6 is the first full Xcode compile, simulator/device, accessibility, persistence, and UI-test verification cycle.
 
 ## v1.0 Scope
 
@@ -39,6 +39,7 @@ If the answer is no, it does not belong in Carry Splits v1.0.
 | Persistence | SwiftData |
 | Architecture | Lightweight MVVM |
 | Money math | `Decimal` + integer minor units |
+| Sharing | Native SwiftUI `ShareLink` |
 | Backend | None for v1.0 |
 | Authentication | None |
 | Networking | None required |
@@ -74,12 +75,13 @@ CarrySplit/
 2. Add participants by name.
 3. Add an expense and choose who paid.
 4. Choose who participated in the expense.
-5. Split equally or enter exact amounts.
+5. Split equally or enter exact amounts with live reconciliation feedback.
 6. See everyone's running balance update immediately.
 7. Open Settle Up to generate the remaining transfers.
-8. Mark a real-world payment paid and recalculate the plan.
-9. Rename, archive, restore, or delete the split as needed.
-10. Close and reopen the app with the local ledger preserved by SwiftData.
+8. Share the settlement plan through the native iOS Share Sheet when needed.
+9. Mark a real-world payment paid and recalculate the plan.
+10. Rename, archive, restore, or delete the split as needed.
+11. Close and reopen the app with the local ledger preserved by SwiftData.
 
 ## Persistence Design
 
@@ -101,13 +103,28 @@ Historical safeguards prevent deleting a participant while that person is refere
 
 Generated settlement recommendations are not stored as source-of-truth records. A settlement becomes persisted history only after the user marks that payment as completed.
 
+## Polish and Accessibility
+
+Carry Splits intentionally stays close to native iOS conventions rather than introducing a custom visual framework.
+
+- semantic system colors for Light/Dark Mode compatibility
+- Dynamic Type-friendly layouts using natural wrapping and `ViewThatFits`
+- VoiceOver labels and hints for balance meaning and non-obvious actions
+- stable accessibility identifiers for UI automation
+- status communicated with words and symbols rather than color alone
+- success sensory feedback only when a settlement payment is recorded
+- native sharing through `ShareLink`
+- no branded splash screen
+
+The final app-icon artwork and launch target configuration will be attached and visually verified during Phase 6 Xcode assembly.
+
 ## Development Principles
 
 1. Keep the interaction model shallow and fast.
 2. Prefer native Apple frameworks over third-party dependencies.
 3. Keep settlement calculations independent from the UI and persistence layers.
 4. Keep customer expense data on-device in v1.0.
-5. Require tests for balance, settlement, and persistence behavior.
+5. Require tests for balance, settlement, persistence, and share-summary behavior.
 6. Avoid infrastructure that does not directly improve the core split-and-settle workflow.
 
 ## Documentation
@@ -115,6 +132,7 @@ Generated settlement recommendations are not stored as source-of-truth records. 
 - `docs/PRODUCT.md` — locked v1.0 product definition
 - `docs/ARCHITECTURE.md` — technical boundaries and data flow
 - `docs/ROADMAP.md` — implementation sequence
+- `docs/BRAND.md` — visual, accessibility, icon, and launch direction
 - `docs/RELEASE_CHECKLIST.md` — App Store readiness checklist
 
 ## License
