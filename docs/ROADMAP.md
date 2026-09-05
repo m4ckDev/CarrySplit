@@ -49,26 +49,40 @@
 - Add fresh-ModelContext persistence tests
 - Verify saved ledger reconstruction through a new model context
 
-## Phase 5 — Polish
+## Phase 5 — Polish ✅
 
-- Native Share Sheet settlement summary
-- Dynamic Type review
-- VoiceOver review and labels
-- Dark Mode verification
-- Currency formatting review
-- Haptics where useful
-- App icon and launch presentation
-- Final visual spacing and empty-state pass
+- Add native SwiftUI settlement sharing with `ShareLink`
+- Add deterministic share-summary generation and tests
+- Improve Dynamic Type behavior with adaptive `ViewThatFits` layouts
+- Review VoiceOver labels, hints, and reading order
+- Add stable accessibility identifiers for Phase 6 UI automation
+- Keep status communication independent from color
+- Review interface styling for semantic Light/Dark Mode behavior
+- Review currency formatting and locale ordering
+- Add restrained success sensory feedback when a settlement payment is recorded
+- Improve form focus, validation, and exact-allocation feedback
+- Improve empty states and participant-management presentation
+- Lock app-icon direction and launch-presentation rules in `docs/BRAND.md`
 
 ## Phase 6 — Verification
 
-- Unit test pass in Xcode
-- UI test pass in Xcode
-- Simulator testing
-- Physical iPhone testing
-- Offline testing
-- Data persistence testing across app relaunch
-- Accessibility pass
+- Assemble the Xcode project and targets
+- Attach all source files to the correct application/test targets
+- Export/import the final 1024 × 1024 app-icon artwork into the asset catalog
+- Configure the neutral launch presentation
+- Run a clean Xcode build with zero compiler errors
+- Resolve compiler warnings
+- Run the complete unit/workflow/persistence test suite
+- Build and run UI automation against stable accessibility identifiers
+- Test a current iPhone simulator
+- Test the oldest supported iOS 17 simulator available
+- Test a physical iPhone
+- Verify complete offline operation
+- Terminate/relaunch and verify SwiftData persistence
+- Visually inspect Light Mode and Dark Mode
+- Test standard and accessibility Dynamic Type sizes
+- Perform a VoiceOver navigation pass
+- Test long names, large monetary amounts, and JPY values
 
 ## Phase 7 — Release
 
@@ -82,6 +96,6 @@
 
 ## Current Milestone
 
-**Phase 5 — Polish**
+**Phase 6 — Verification**
 
-Carry Splits now uses SwiftData as its local source of truth. Splits, participants, expenses, allocations, archive state, edits, deletions, and completed settlement payments are saved locally and reconstructed into lightweight UI snapshots when loaded. The next milestone is visual, accessibility, sharing, and App Store-facing polish before the Xcode verification phase.
+The v1.0 feature set, local persistence layer, sharing flow, accessibility hooks, adaptive layouts, and visual direction are now established in source. The next milestone is the first real Xcode compile/test cycle, simulator and device validation, final icon attachment, and release-quality verification.
