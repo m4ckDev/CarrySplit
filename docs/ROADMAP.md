@@ -19,23 +19,31 @@
 - Implement deterministic settlement optimization
 - Add unit tests for core domain math
 
-## Phase 3 — Core UI
+## Phase 3 — Core UI ✅
 
 - Build Splits screen
 - Build Create Split flow
+- Build participant entry flow
 - Build Split Detail screen
 - Build Add/Edit Expense flow
+- Build equal/exact split controls
+- Show live running balances
 - Build Settle Up screen
+- Recalculate settlement plan after marking payments paid
 - Add empty states and validation feedback
+- Add Phase 3 workflow tests
 
 ## Phase 4 — Persistence and Editing
 
-- Wire SwiftUI CRUD operations to SwiftData
-- Support rename, archive, and delete
-- Support participant editing with historical-data safeguards
-- Support expense editing and deletion
+- Replace Phase 3 in-memory session state with SwiftData-backed CRUD
+- Persist newly created splits and participants
+- Persist added and edited expenses
 - Persist completed settlement payments
+- Support split rename, archive, and delete
+- Support participant editing with historical-data safeguards
+- Support expense deletion with recalculation
 - Verify relaunch persistence
+- Add persistence-focused tests
 
 ## Phase 5 — Polish
 
@@ -43,7 +51,7 @@
 - Dynamic Type
 - VoiceOver labels
 - Dark Mode verification
-- Currency formatting
+- Currency formatting review
 - Haptics where useful
 - App icon and launch presentation
 
@@ -69,6 +77,6 @@
 
 ## Current Milestone
 
-**Phase 3 — Core UI**
+**Phase 4 — Persistence and Editing**
 
-The domain ledger and settlement engine are established. The next milestone is the first complete user workflow: create a split, add participants, enter an expense, see balances, and settle up.
+The complete in-memory SwiftUI workflow is established: create a split, add participants, enter or edit expenses, see live balances, generate settlements, and mark payments paid. The next milestone replaces the temporary session state with the existing SwiftData domain so all customer data survives relaunch.
