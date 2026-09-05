@@ -6,7 +6,9 @@ Carry Splits is a small, local-first iPhone expense splitter. One person records
 
 ## Status
 
-Repository foundation established. Product definition is locked for v1.0; implementation is next.
+**Phase 2 — Core Domain complete.**
+
+The repository now contains the SwiftData domain schema, currency-safe allocation math, carry-forward balance engine, settlement planner, model adapter, and domain unit tests. Phase 3 is the first complete SwiftUI workflow.
 
 ## v1.0 Scope
 
@@ -36,6 +38,7 @@ If the answer is no, it does not belong in Carry Splits v1.0.
 | UI | SwiftUI |
 | Persistence | SwiftData |
 | Architecture | Lightweight MVVM |
+| Money math | `Decimal` + integer minor units |
 | Backend | None for v1.0 |
 | Authentication | None |
 | Networking | None required |
@@ -64,6 +67,20 @@ CarrySplit/
 ├── SECURITY.md
 └── README.md
 ```
+
+## Core Domain
+
+Persisted entities:
+
+- `ExpenseSplit`
+- `Participant`
+- `Expense`
+- `ExpenseAllocation`
+- `SettlementPayment`
+
+Pure calculation types and services are intentionally separate from SwiftData. The settlement engine receives plain ledger values, calculates balances in integer minor units, and converts results back to `Decimal` for persistence and display.
+
+A completed settlement is recorded as a ledger payment. Generated settlement recommendations are not persisted until the user marks a payment as completed, preventing stale recommendations from becoming source-of-truth data.
 
 ## Development Principles
 
