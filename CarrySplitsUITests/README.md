@@ -1,11 +1,18 @@
 # CarrySplitsUITests
 
-UI tests belong here and will be executed once the Xcode project is assembled.
+UI tests live here and are executed by the Phase 6 macOS verification workflow.
 
-## Phase 6 Priority
+## Implemented Coverage
 
-- launch into the Splits screen
-- create a split
+`CarrySplitsUITests.swift` currently verifies:
+
+- app launch reaches the Splits screen
+- a new split can be created through the real SwiftUI flow
+- the created split appears in the list
+- terminating and relaunching the app preserves that split through SwiftData
+
+## Next UI Verification Coverage
+
 - add participants
 - add an expense
 - edit an expense
@@ -13,7 +20,6 @@ UI tests belong here and will be executed once the Xcode project is assembled.
 - share a settlement summary
 - mark a settlement paid
 - archive and restore a split
-- verify persistence after relaunch
 - verify key flows at large Dynamic Type sizes where practical
 
 ## Stable Accessibility Identifiers
