@@ -8,6 +8,7 @@ struct EditSplitView: View {
 
     @State private var name: String
     @State private var errorMessage: String?
+    @FocusState private var nameIsFocused: Bool
 
     init(splitID: UUID, viewModel: SplitsViewModel) {
         self.splitID = splitID
@@ -21,6 +22,14 @@ struct EditSplitView: View {
                 Section("Split Name") {
                     TextField("Name", text: $name)
                         .textInputAutocapitalization(.words)
+                        .submitLabel(.done)
+                        .focused($nameIsFocused)
+                        .accessibilityIdentifier("editSplit.name")
+                        .onSubmit {
+                            if canSave {
+                                save()
+                            }
+                        }
                 }
             }
             .navigationTitle("Edit Split")
@@ -36,7 +45,12 @@ struct EditSplitView: View {
                     Button("Save") {
                         save()
                     }
+                    .disabled(!canSave)
+                    .accessibilityIdentifier("editSplit.save")
                 }
+            }
+            .task {
+                nameIsFocused = true
             }
             .alert("Couldn’t Rename Split", isPresented: errorBinding) {
                 Button("OK", role: .cancel) { }
@@ -44,6 +58,10 @@ struct EditSplitView: View {
                 Text(errorMessage ?? "Unknown error")
             }
         }
+    }
+
+    private var canSave: Bool {
+        !name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
     }
 
     private var errorBinding: Binding<Bool> {
