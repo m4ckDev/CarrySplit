@@ -15,28 +15,41 @@ struct ManageParticipantsView: View {
         NavigationStack {
             Group {
                 if let split = viewModel.split(withID: splitID) {
-                    List {
-                        ForEach(split.participants.sorted(by: { $0.sortOrder < $1.sortOrder })) { participant in
-                            Button {
-                                selectedParticipantID = participant.id
-                                renameText = participant.name
-                            } label: {
-                                HStack {
-                                    Text(participant.name)
-                                        .foregroundStyle(.primary)
-                                    Spacer()
-                                    Image(systemName: "pencil")
-                                        .foregroundStyle(.secondary)
-                                }
-                            }
-                            .swipeActions(edge: .trailing, allowsFullSwipe: false) {
-                                Button(role: .destructive) {
-                                    participantPendingDeletion = participant
+                    if split.participants.isEmpty {
+                        ContentUnavailableView(
+                            "No People Yet",
+                            systemImage: "person.2",
+                            description: Text("Add a person from the split screen first.")
+                        )
+                    } else {
+                        List {
+                            ForEach(split.participants.sorted(by: { $0.sortOrder < $1.sortOrder })) { participant in
+                                Button {
+                                    selectedParticipantID = participant.id
+                                    renameText = participant.name
                                 } label: {
-                                    Label("Delete", systemImage: "trash")
+                                    HStack(spacing: 12) {
+                                        Text(participant.name)
+                                            .foregroundStyle(.primary)
+                                        Spacer(minLength: 8)
+                                        Image(systemName: "pencil")
+                                            .foregroundStyle(.secondary)
+                                            .accessibilityHidden(true)
+                                    }
+                                }
+                                .accessibilityIdentifier("participant.row.\(participant.id.uuidString)")
+                                .accessibilityLabel("Rename \(participant.name)")
+                                .accessibilityHint("Opens a field to change this person's display name")
+                                .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+                                    Button(role: .destructive) {
+                                        participantPendingDeletion = participant
+                                    } label: {
+                                        Label("Delete", systemImage: "trash")
+                                    }
                                 }
                             }
                         }
+                        .accessibilityIdentifier("participants.list")
                     }
                 } else {
                     ContentUnavailableView("Split Not Found", systemImage: "exclamationmark.triangle")
@@ -49,16 +62,19 @@ struct ManageParticipantsView: View {
                     Button("Done") {
                         dismiss()
                     }
+                    .accessibilityIdentifier("participants.done")
                 }
             }
             .alert("Rename Person", isPresented: renameAlertBinding) {
                 TextField("Name", text: $renameText)
+                    .accessibilityIdentifier("participants.renameName")
                 Button("Cancel", role: .cancel) {
                     selectedParticipantID = nil
                 }
                 Button("Save") {
                     renameSelectedParticipant()
                 }
+                .disabled(renameText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
             } message: {
                 Text("Changing a name keeps all existing expense and settlement history intact.")
             }
