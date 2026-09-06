@@ -80,32 +80,85 @@
 - Add CI result artifacts and Xcode bootstrap documentation
 - Enforce iPhone-only target configuration
 
-## Phase 6B — Manual Device and Accessibility Verification
+## Phase 6B — Manual Device and Accessibility Verification ⏳
 
-- Select the Apple Developer signing team in Xcode
-- Test a physical iPhone
-- Verify complete offline operation on-device
-- Terminate/relaunch and verify SwiftData persistence on-device
-- Visually inspect Light Mode and Dark Mode
-- Test standard and accessibility Dynamic Type sizes
-- Perform a VoiceOver navigation pass
-- Test long names, large monetary amounts, and JPY values
-- Inspect the app icon at actual Home Screen size
-- Inspect the neutral launch-to-content transition
-- Resolve any release-blocking local Xcode warnings
+Completed in simulator/manual testing:
 
-## Phase 7 — Release
+- Core create/add/split/settle workflow
+- Terminate/relaunch SwiftData persistence
+- Offline operation
+- Light/Dark presentation
+- Accessibility Dynamic Type
+- Accessibility Inspector audit
+- Long names and large monetary values
+- JPY / zero-decimal currency
+- Uneven remainder handling
+- Exact-split validation
+- Native settlement sharing
+- App icon at Home Screen size
 
-- App Store screenshots
-- App Store description and keywords
-- Privacy details
-- Pricing set to $1.99
-- Archive in Xcode
-- TestFlight validation
-- App Review submission
+Still required before final App Review submission:
+
+- Run the release candidate on a physical iPhone
+- Perform the VoiceOver common-workflow pass on a physical iPhone
+- Verify the TestFlight build on a physical iPhone
+- Resolve any physical-device release blocker discovered by those checks
+
+## Phase 7 — Release Preparation 🚧
+
+### Phase 7A — Metadata and Compliance
+
+- [x] Prepare App Store name, subtitle, description, promotional text, and keywords
+- [x] Prepare App Review notes
+- [x] Prepare App Privacy answers
+- [x] Add app privacy manifest
+- [x] Add export-compliance declaration
+- [x] Prepare privacy-policy copy
+- [x] Prepare support-page copy
+- [x] Prepare screenshot plan
+- [x] Prepare Xcode/TestFlight/App Review runbook
+- [ ] Publish Privacy Policy URL
+- [ ] Publish Support URL with real contact information
+- [ ] Create App Store Connect app record
+- [ ] Confirm Carry Splits name availability
+- [ ] Complete age-rating questionnaire
+- [ ] Complete app accessibility declarations for verified features
+
+### Phase 7B — Commercial Setup
+
+- [ ] Accept Paid Apps Agreement
+- [ ] Complete required tax/banking setup
+- [ ] Set base pricing and $1.99 U.S. price
+- [ ] Confirm storefront availability
+
+### Phase 7C — Store Assets
+
+- [ ] Capture final 6.9-inch iPhone screenshots
+- [ ] Compose/upload final product-page screenshots
+- [ ] Verify listing metadata in App Store Connect
+
+### Phase 7D — Build and TestFlight
+
+- [ ] Regenerate final Xcode project
+- [ ] Archive release build
+- [ ] Validate archive
+- [ ] Upload build 1.0.0 (1)
+- [ ] Wait for App Store Connect processing
+- [ ] Install via TestFlight on physical iPhone
+- [ ] Finish Phase 6B physical-device and VoiceOver gate
+
+### Phase 7E — App Review
+
+- [ ] Select processed build for version 1.0.0
+- [ ] Complete review contact fields
+- [ ] Verify privacy/support URLs
+- [ ] Verify pricing and availability
+- [ ] Verify screenshots and metadata
+- [ ] Select Manual Release
+- [ ] Submit for App Review
 
 ## Current Milestone
 
-**Phase 6B — Manual Device and Accessibility Verification**
+**Phase 7A — App Store Release Preparation**
 
-Automated Xcode verification is green: the app and all test targets compile, the automated test suite runs successfully on a real iPhone Simulator, and UI automation verifies local SwiftData persistence across relaunch. The remaining Phase 6 work requires interactive Xcode and a physical iPhone before release preparation begins.
+Release preparation has started. Metadata, compliance documentation, privacy/support copy, screenshot direction, and the submission runbook are now in the repository. Final App Review submission remains gated by live support/privacy URLs, App Store Connect commercial setup, screenshots, archive/TestFlight processing, and the remaining physical-iPhone/VoiceOver verification.
