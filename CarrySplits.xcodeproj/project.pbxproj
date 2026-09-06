@@ -1,0 +1,670 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0B99D4DB1A1466D04A0B2B00 /* MoneyMath.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CB4C0CF100B66998D4AC83E /* MoneyMath.swift */; };
+		0CA7D0327A08DE6589903E15 /* SplitsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 691DB179E75AA83B09E2E3F7 /* SplitsViewModel.swift */; };
+		1895C4D86F8F83FF88676308 /* ExpenseAllocationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAA8DB673FE2078E83AC7523 /* ExpenseAllocationService.swift */; };
+		2712B8B9DCC8C52DA73103A6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F45D0984D8B3DABA21543F8E /* Assets.xcassets */; };
+		2980A68CA88376C922F334CF /* ExpenseEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9053120843433120B12A564D /* ExpenseEditorView.swift */; };
+		2F553A970EC8D51B3AAACAF9 /* SplitLedgerAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2712A90CCEB536D271EB9DDD /* SplitLedgerAdapter.swift */; };
+		372126D936F0984C267E63E1 /* SplitsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE36F77611F107BFB1E5EEE1 /* SplitsView.swift */; };
+		38D0F817779F8979805A2151 /* EditSplitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7A648BEFE3AAABE030130DC /* EditSplitView.swift */; };
+		4EBB6D87019C38F4CCB20781 /* SplitsViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E75E7FCE84A57650463D835D /* SplitsViewModelTests.swift */; };
+		54639150E28C8E2BF8F40DD7 /* CurrencyFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8495515A37E01664B7C9C198 /* CurrencyFormatter.swift */; };
+		549BEC74EAA8ECDA03906232 /* LedgerTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74B0E1D48ADD0A51EF5B083E /* LedgerTypes.swift */; };
+		6F65DD4EDE5A6797BF4E6C0E /* UIStateModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE2DDE120553F0CAF9554BEB /* UIStateModels.swift */; };
+		80EAC167F202CA4C46880F94 /* SettlementService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D9E62ECF0FD63C63673A56B /* SettlementService.swift */; };
+		8C977FB0B3350BD22830DC31 /* SettleUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20062790C2CBF55C17371F89 /* SettleUpView.swift */; };
+		A318D1CB655E0B7E193E03E0 /* CurrencyCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA812ADC8022B20DBF18F64F /* CurrencyCatalog.swift */; };
+		A9897F2C831E15CEDF799566 /* SettlementSummaryServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D37F66ECF2FB1D8043272E07 /* SettlementSummaryServiceTests.swift */; };
+		A9F104A6BBD74797593E1DEE /* SplitDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 136C85874758D25854AA3689 /* SplitDetailView.swift */; };
+		AA1AC9ACF15BA112A613C4F5 /* SettlementSummaryService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDFDE48F80A289341E76B45A /* SettlementSummaryService.swift */; };
+		B2C6BEF6A26D8D24F1BF358A /* CreateSplitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 132549B531B2AFB5225F03E3 /* CreateSplitView.swift */; };
+		B5EB3A30ED6853C1E8FD66CC /* PersistenceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD35B3BB97F046C67838AB8C /* PersistenceTests.swift */; };
+		B8612343C4BC6CEC56D1CA85 /* DomainModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D7161ED325AD81C8638BB25 /* DomainModels.swift */; };
+		C2D3AB85B265F42EFC2EB1A5 /* SettlementServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5545ED280C9BCEACC1B8285B /* SettlementServiceTests.swift */; };
+		C85D96E1FF8B1247B0831A50 /* CarrySplitsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5156BBCF93DB7A8085AB452 /* CarrySplitsUITests.swift */; };
+		D0783BDEBBB6DC7C9309B75B /* ManageParticipantsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 175AD707366A74BCCB10FF7B /* ManageParticipantsView.swift */; };
+		DBD2B94CD8E13BFA08C80DA6 /* AddParticipantView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A45A10B844868E7645A43566 /* AddParticipantView.swift */; };
+		F6B380B8ADCD824D3825A5EC /* CarrySplitsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A789A692BD282F5BE07F2B19 /* CarrySplitsApp.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		4249606AD68876D3F36F18AF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = AED32494E8AD6591F7EDC265 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 645D429DE6BE6C97C302C8E4;
+			remoteInfo = CarrySplits;
+		};
+		ECDF1E34704E4B463740CE82 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = AED32494E8AD6591F7EDC265 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 645D429DE6BE6C97C302C8E4;
+			remoteInfo = CarrySplits;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		0D9E62ECF0FD63C63673A56B /* SettlementService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettlementService.swift; sourceTree = "<group>"; };
+		132549B531B2AFB5225F03E3 /* CreateSplitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateSplitView.swift; sourceTree = "<group>"; };
+		136C85874758D25854AA3689 /* SplitDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplitDetailView.swift; sourceTree = "<group>"; };
+		175AD707366A74BCCB10FF7B /* ManageParticipantsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManageParticipantsView.swift; sourceTree = "<group>"; };
+		20062790C2CBF55C17371F89 /* SettleUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettleUpView.swift; sourceTree = "<group>"; };
+		2712A90CCEB536D271EB9DDD /* SplitLedgerAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplitLedgerAdapter.swift; sourceTree = "<group>"; };
+		277BE863600B06F9054EA62D /* CarrySplits.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = CarrySplits.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		2CB4C0CF100B66998D4AC83E /* MoneyMath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoneyMath.swift; sourceTree = "<group>"; };
+		48EAAFE80B2EB9FB6C54F26F /* CarrySplitsUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = CarrySplitsUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		5545ED280C9BCEACC1B8285B /* SettlementServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettlementServiceTests.swift; sourceTree = "<group>"; };
+		5FB3C2292C22BC33C9B86C38 /* CarrySplitsTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = CarrySplitsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		691DB179E75AA83B09E2E3F7 /* SplitsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplitsViewModel.swift; sourceTree = "<group>"; };
+		6D7161ED325AD81C8638BB25 /* DomainModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DomainModels.swift; sourceTree = "<group>"; };
+		74B0E1D48ADD0A51EF5B083E /* LedgerTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LedgerTypes.swift; sourceTree = "<group>"; };
+		8495515A37E01664B7C9C198 /* CurrencyFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyFormatter.swift; sourceTree = "<group>"; };
+		9053120843433120B12A564D /* ExpenseEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpenseEditorView.swift; sourceTree = "<group>"; };
+		A45A10B844868E7645A43566 /* AddParticipantView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddParticipantView.swift; sourceTree = "<group>"; };
+		A789A692BD282F5BE07F2B19 /* CarrySplitsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarrySplitsApp.swift; sourceTree = "<group>"; };
+		A7A648BEFE3AAABE030130DC /* EditSplitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditSplitView.swift; sourceTree = "<group>"; };
+		AE2DDE120553F0CAF9554BEB /* UIStateModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIStateModels.swift; sourceTree = "<group>"; };
+		B5156BBCF93DB7A8085AB452 /* CarrySplitsUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarrySplitsUITests.swift; sourceTree = "<group>"; };
+		D37F66ECF2FB1D8043272E07 /* SettlementSummaryServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettlementSummaryServiceTests.swift; sourceTree = "<group>"; };
+		DAA8DB673FE2078E83AC7523 /* ExpenseAllocationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpenseAllocationService.swift; sourceTree = "<group>"; };
+		DDFDE48F80A289341E76B45A /* SettlementSummaryService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettlementSummaryService.swift; sourceTree = "<group>"; };
+		DE36F77611F107BFB1E5EEE1 /* SplitsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplitsView.swift; sourceTree = "<group>"; };
+		E75E7FCE84A57650463D835D /* SplitsViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplitsViewModelTests.swift; sourceTree = "<group>"; };
+		EA812ADC8022B20DBF18F64F /* CurrencyCatalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyCatalog.swift; sourceTree = "<group>"; };
+		F45D0984D8B3DABA21543F8E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		FD35B3BB97F046C67838AB8C /* PersistenceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceTests.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		2CC55D8A5383908D12B69D60 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				A45A10B844868E7645A43566 /* AddParticipantView.swift */,
+				132549B531B2AFB5225F03E3 /* CreateSplitView.swift */,
+				A7A648BEFE3AAABE030130DC /* EditSplitView.swift */,
+				9053120843433120B12A564D /* ExpenseEditorView.swift */,
+				175AD707366A74BCCB10FF7B /* ManageParticipantsView.swift */,
+				20062790C2CBF55C17371F89 /* SettleUpView.swift */,
+				136C85874758D25854AA3689 /* SplitDetailView.swift */,
+				DE36F77611F107BFB1E5EEE1 /* SplitsView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		3340D693A6161ACF9A2F531C /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				6D7161ED325AD81C8638BB25 /* DomainModels.swift */,
+				AE2DDE120553F0CAF9554BEB /* UIStateModels.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		4B503B04500A6382224452E7 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				F45D0984D8B3DABA21543F8E /* Assets.xcassets */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		53A21F1A0C962F77F8C6B6A6 = {
+			isa = PBXGroup;
+			children = (
+				588E5DDC7D5A9C8C4E9A87B9 /* CarrySplits */,
+				FCA1DC9B6CEBC6E5B29D0460 /* CarrySplitsTests */,
+				E14953C8C2B17D7A024BAE76 /* CarrySplitsUITests */,
+				D48E0EB9D34A52FAF8FCACA1 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		550BFD80EC02D48D36D85286 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				A789A692BD282F5BE07F2B19 /* CarrySplitsApp.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		588E5DDC7D5A9C8C4E9A87B9 /* CarrySplits */ = {
+			isa = PBXGroup;
+			children = (
+				550BFD80EC02D48D36D85286 /* App */,
+				3340D693A6161ACF9A2F531C /* Models */,
+				4B503B04500A6382224452E7 /* Resources */,
+				C919503145D12C0FB57E9C79 /* Services */,
+				5EA019C09F621CD2AF606C68 /* Utilities */,
+				EF8434812A150426CBCD06D9 /* ViewModels */,
+				2CC55D8A5383908D12B69D60 /* Views */,
+			);
+			path = CarrySplits;
+			sourceTree = "<group>";
+		};
+		5EA019C09F621CD2AF606C68 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				EA812ADC8022B20DBF18F64F /* CurrencyCatalog.swift */,
+				8495515A37E01664B7C9C198 /* CurrencyFormatter.swift */,
+				2CB4C0CF100B66998D4AC83E /* MoneyMath.swift */,
+			);
+			path = Utilities;
+			sourceTree = "<group>";
+		};
+		C919503145D12C0FB57E9C79 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				DAA8DB673FE2078E83AC7523 /* ExpenseAllocationService.swift */,
+				74B0E1D48ADD0A51EF5B083E /* LedgerTypes.swift */,
+				0D9E62ECF0FD63C63673A56B /* SettlementService.swift */,
+				DDFDE48F80A289341E76B45A /* SettlementSummaryService.swift */,
+				2712A90CCEB536D271EB9DDD /* SplitLedgerAdapter.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		D48E0EB9D34A52FAF8FCACA1 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				277BE863600B06F9054EA62D /* CarrySplits.app */,
+				5FB3C2292C22BC33C9B86C38 /* CarrySplitsTests.xctest */,
+				48EAAFE80B2EB9FB6C54F26F /* CarrySplitsUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		E14953C8C2B17D7A024BAE76 /* CarrySplitsUITests */ = {
+			isa = PBXGroup;
+			children = (
+				B5156BBCF93DB7A8085AB452 /* CarrySplitsUITests.swift */,
+			);
+			path = CarrySplitsUITests;
+			sourceTree = "<group>";
+		};
+		EF8434812A150426CBCD06D9 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				691DB179E75AA83B09E2E3F7 /* SplitsViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		FCA1DC9B6CEBC6E5B29D0460 /* CarrySplitsTests */ = {
+			isa = PBXGroup;
+			children = (
+				FD35B3BB97F046C67838AB8C /* PersistenceTests.swift */,
+				5545ED280C9BCEACC1B8285B /* SettlementServiceTests.swift */,
+				D37F66ECF2FB1D8043272E07 /* SettlementSummaryServiceTests.swift */,
+				E75E7FCE84A57650463D835D /* SplitsViewModelTests.swift */,
+			);
+			path = CarrySplitsTests;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		645D429DE6BE6C97C302C8E4 /* CarrySplits */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4A9CC5EA08C236DB97F6E679 /* Build configuration list for PBXNativeTarget "CarrySplits" */;
+			buildPhases = (
+				9718DDEC8D80FC9F6B8A6EC1 /* Sources */,
+				9BBD24F4D23E8ED3626FEFD9 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = CarrySplits;
+			packageProductDependencies = (
+			);
+			productName = CarrySplits;
+			productReference = 277BE863600B06F9054EA62D /* CarrySplits.app */;
+			productType = "com.apple.product-type.application";
+		};
+		8C26B97F70F6005D092AC7E9 /* CarrySplitsTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D4A97DFA64BFDBFA853337DE /* Build configuration list for PBXNativeTarget "CarrySplitsTests" */;
+			buildPhases = (
+				BAAE2E6AB8B4554962C118F9 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				7BFD01E66D23960852104B33 /* PBXTargetDependency */,
+			);
+			name = CarrySplitsTests;
+			packageProductDependencies = (
+			);
+			productName = CarrySplitsTests;
+			productReference = 5FB3C2292C22BC33C9B86C38 /* CarrySplitsTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		E51F84E0DC30DA50236B6F22 /* CarrySplitsUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B24447D91D1F180AC84EC66B /* Build configuration list for PBXNativeTarget "CarrySplitsUITests" */;
+			buildPhases = (
+				637469628795069C9184129F /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				7BBE940C38BAED88C4B08BC0 /* PBXTargetDependency */,
+			);
+			name = CarrySplitsUITests;
+			packageProductDependencies = (
+			);
+			productName = CarrySplitsUITests;
+			productReference = 48EAAFE80B2EB9FB6C54F26F /* CarrySplitsUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		AED32494E8AD6591F7EDC265 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					645D429DE6BE6C97C302C8E4 = {
+						DevelopmentTeam = "";
+						ProvisioningStyle = Automatic;
+					};
+					8C26B97F70F6005D092AC7E9 = {
+						DevelopmentTeam = "";
+						ProvisioningStyle = Automatic;
+					};
+					E51F84E0DC30DA50236B6F22 = {
+						DevelopmentTeam = "";
+						ProvisioningStyle = Automatic;
+						TestTargetID = 645D429DE6BE6C97C302C8E4;
+					};
+				};
+			};
+			buildConfigurationList = 7898A99B7CCA1783A98048B2 /* Build configuration list for PBXProject "CarrySplits" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 53A21F1A0C962F77F8C6B6A6;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = D48E0EB9D34A52FAF8FCACA1 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				645D429DE6BE6C97C302C8E4 /* CarrySplits */,
+				8C26B97F70F6005D092AC7E9 /* CarrySplitsTests */,
+				E51F84E0DC30DA50236B6F22 /* CarrySplitsUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		9BBD24F4D23E8ED3626FEFD9 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2712B8B9DCC8C52DA73103A6 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		637469628795069C9184129F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C85D96E1FF8B1247B0831A50 /* CarrySplitsUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9718DDEC8D80FC9F6B8A6EC1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DBD2B94CD8E13BFA08C80DA6 /* AddParticipantView.swift in Sources */,
+				F6B380B8ADCD824D3825A5EC /* CarrySplitsApp.swift in Sources */,
+				B2C6BEF6A26D8D24F1BF358A /* CreateSplitView.swift in Sources */,
+				A318D1CB655E0B7E193E03E0 /* CurrencyCatalog.swift in Sources */,
+				54639150E28C8E2BF8F40DD7 /* CurrencyFormatter.swift in Sources */,
+				B8612343C4BC6CEC56D1CA85 /* DomainModels.swift in Sources */,
+				38D0F817779F8979805A2151 /* EditSplitView.swift in Sources */,
+				1895C4D86F8F83FF88676308 /* ExpenseAllocationService.swift in Sources */,
+				2980A68CA88376C922F334CF /* ExpenseEditorView.swift in Sources */,
+				549BEC74EAA8ECDA03906232 /* LedgerTypes.swift in Sources */,
+				D0783BDEBBB6DC7C9309B75B /* ManageParticipantsView.swift in Sources */,
+				0B99D4DB1A1466D04A0B2B00 /* MoneyMath.swift in Sources */,
+				8C977FB0B3350BD22830DC31 /* SettleUpView.swift in Sources */,
+				80EAC167F202CA4C46880F94 /* SettlementService.swift in Sources */,
+				AA1AC9ACF15BA112A613C4F5 /* SettlementSummaryService.swift in Sources */,
+				A9F104A6BBD74797593E1DEE /* SplitDetailView.swift in Sources */,
+				2F553A970EC8D51B3AAACAF9 /* SplitLedgerAdapter.swift in Sources */,
+				372126D936F0984C267E63E1 /* SplitsView.swift in Sources */,
+				0CA7D0327A08DE6589903E15 /* SplitsViewModel.swift in Sources */,
+				6F65DD4EDE5A6797BF4E6C0E /* UIStateModels.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BAAE2E6AB8B4554962C118F9 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B5EB3A30ED6853C1E8FD66CC /* PersistenceTests.swift in Sources */,
+				C2D3AB85B265F42EFC2EB1A5 /* SettlementServiceTests.swift in Sources */,
+				A9897F2C831E15CEDF799566 /* SettlementSummaryServiceTests.swift in Sources */,
+				4EBB6D87019C38F4CCB20781 /* SplitsViewModelTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		7BBE940C38BAED88C4B08BC0 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 645D429DE6BE6C97C302C8E4 /* CarrySplits */;
+			targetProxy = ECDF1E34704E4B463740CE82 /* PBXContainerItemProxy */;
+		};
+		7BFD01E66D23960852104B33 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 645D429DE6BE6C97C302C8E4 /* CarrySplits */;
+			targetProxy = 4249606AD68876D3F36F18AF /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		073CFEB1E58BE5B0610BE602 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		1C3938B784FF83685986086B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.m4ckdev.CarrySplitsTests;
+				PRODUCT_NAME = CarrySplitsTests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CarrySplits.app/CarrySplits";
+			};
+			name = Release;
+		};
+		4BB4996B850E9AC8F42F823F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.m4ckdev.CarrySplitsUITests;
+				PRODUCT_NAME = CarrySplitsUITests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_TARGET_NAME = CarrySplits;
+			};
+			name = Release;
+		};
+		C6ACBC56FE6801EEC963F98A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.m4ckdev.CarrySplitsTests;
+				PRODUCT_NAME = CarrySplitsTests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CarrySplits.app/CarrySplits";
+			};
+			name = Debug;
+		};
+		D1575478EABBA37718909110 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.m4ckdev.CarrySplitsUITests;
+				PRODUCT_NAME = CarrySplitsUITests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_TARGET_NAME = CarrySplits;
+			};
+			name = Debug;
+		};
+		E417A78286AEC6C8E7B3A816 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = "";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		F6506553146676BC61FD7D1F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_PREVIEWS = YES;
+				INFOPLIST_FILE = CarrySplits/Resources/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.m4ckdev.CarrySplits;
+				PRODUCT_MODULE_NAME = CarrySplits;
+				PRODUCT_NAME = CarrySplits;
+				SDKROOT = iphoneos;
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		FFEAA046B424B8CF323E09C3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_PREVIEWS = YES;
+				INFOPLIST_FILE = CarrySplits/Resources/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.m4ckdev.CarrySplits;
+				PRODUCT_MODULE_NAME = CarrySplits;
+				PRODUCT_NAME = CarrySplits;
+				SDKROOT = iphoneos;
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		4A9CC5EA08C236DB97F6E679 /* Build configuration list for PBXNativeTarget "CarrySplits" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FFEAA046B424B8CF323E09C3 /* Debug */,
+				F6506553146676BC61FD7D1F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		7898A99B7CCA1783A98048B2 /* Build configuration list for PBXProject "CarrySplits" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				073CFEB1E58BE5B0610BE602 /* Debug */,
+				E417A78286AEC6C8E7B3A816 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		B24447D91D1F180AC84EC66B /* Build configuration list for PBXNativeTarget "CarrySplitsUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D1575478EABBA37718909110 /* Debug */,
+				4BB4996B850E9AC8F42F823F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		D4A97DFA64BFDBFA853337DE /* Build configuration list for PBXNativeTarget "CarrySplitsTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C6ACBC56FE6801EEC963F98A /* Debug */,
+				1C3938B784FF83685986086B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = AED32494E8AD6591F7EDC265 /* Project object */;
+}
