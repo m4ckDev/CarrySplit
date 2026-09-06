@@ -3,12 +3,15 @@ import Foundation
 
 let arguments = CommandLine.arguments
 
-guard arguments.count == 2 else {
+// Different Swift interpreter/toolchain versions may include additional
+// launcher arguments. Treat the final non-option argument as the requested
+// output path rather than requiring an exact argument count.
+guard let outputPath = arguments.dropFirst().last, !outputPath.isEmpty else {
     fputs("Usage: swift generate_app_icon.swift <output-png>\n", stderr)
     exit(2)
 }
 
-let outputURL = URL(fileURLWithPath: arguments[1])
+let outputURL = URL(fileURLWithPath: outputPath)
 let size = NSSize(width: 1024, height: 1024)
 let image = NSImage(size: size)
 
