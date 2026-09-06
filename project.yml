@@ -27,12 +27,14 @@ targets:
           - Resources/Info.plist
     resources:
       - path: CarrySplits/Resources/Assets.xcassets
+      - path: CarrySplits/Resources/PrivacyInfo.xcprivacy
     info:
       path: CarrySplits/Resources/Info.plist
       properties:
         CFBundleDisplayName: Carry Splits
         CFBundleShortVersionString: $(MARKETING_VERSION)
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        ITSAppUsesNonExemptEncryption: false
         UILaunchScreen: {}
         UISupportedInterfaceOrientations:
           - UIInterfaceOrientationPortrait
